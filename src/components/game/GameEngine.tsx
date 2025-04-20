@@ -167,7 +167,7 @@ const GameEngine: React.FC<GameEngineProps> = ({ onGameOver }) => {
       }
       ctx.stroke();
       
-      // Рисуем игрока (куб)
+      // Рисуем игрока (куб) - ИСПРАВЛЕНО ОТОБРАЖЕНИЕ КУБА
       ctx.save();
       ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
       ctx.rotate(player.rotation);
@@ -179,21 +179,29 @@ const GameEngine: React.FC<GameEngineProps> = ({ onGameOver }) => {
       ctx.fillStyle = cubeGradient;
       ctx.fillRect(-player.width / 2, -player.height / 2, player.width, player.height);
       
-      // Детали куба
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      // Детали куба - добавляем ярче обводку и эффекты
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
       ctx.lineWidth = 2;
       ctx.strokeRect(-player.width / 2, -player.height / 2, player.width, player.height);
       
-      // Внутренние линии куба
+      // Внутренние линии куба - более заметные
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
       ctx.beginPath();
       ctx.moveTo(-player.width / 2, -player.height / 2);
-      ctx.lineTo(player.width / 2, -player.height / 2);
+      ctx.lineTo(player.width / 2, player.height / 2);
       ctx.stroke();
       
       ctx.beginPath();
-      ctx.moveTo(-player.width / 2, -player.height / 2);
+      ctx.moveTo(player.width / 2, -player.height / 2);
       ctx.lineTo(-player.width / 2, player.height / 2);
       ctx.stroke();
+      
+      // Добавляем эффект свечения для лучшей видимости
+      ctx.shadowColor = '#ff0066';
+      ctx.shadowBlur = 10;
+      ctx.strokeStyle = '#ffffff';
+      ctx.strokeRect(-player.width / 2, -player.height / 2, player.width, player.height);
+      ctx.shadowBlur = 0;
       
       ctx.restore();
       
@@ -274,6 +282,11 @@ const GameEngine: React.FC<GameEngineProps> = ({ onGameOver }) => {
       ctx.fillStyle = '#ffffff';
       ctx.font = '14px Arial';
       ctx.fillText(`Прогресс: ${Math.floor((gameState.distance / gameState.totalDistance) * 100)}%`, canvas.width - 150, 30);
+      
+      // Отладочная информация для видимости куба
+      ctx.fillStyle = '#ff0000';
+      ctx.font = '12px Arial';
+      ctx.fillText(`Куб: x=${Math.floor(player.x)}, y=${Math.floor(player.y)}`, 20, 50);
     };
     
     // Функция обновления игры
@@ -383,6 +396,7 @@ const GameEngine: React.FC<GameEngineProps> = ({ onGameOver }) => {
         width={800}
         height={400}
         className="border border-blue-500 shadow-lg shadow-blue-500/20 rounded"
+        onClick={handleJump} // Добавлен обработчик клика прямо на canvas
       />
       
       {/* Индикатор прогресса */}

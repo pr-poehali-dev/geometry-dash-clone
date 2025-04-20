@@ -5,19 +5,22 @@ import GDLogo from "@/components/game/GDLogo";
 import { useState, useEffect } from "react";
 
 const Index = () => {
-  const [menuState, setMenuState] = useState<'main' | 'levels' | 'create'>('main');
+  const [menuState, setMenuState] = useState<'main' | 'levels' | 'create' | 'icons' | 'settings'>('main');
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState('official');
   
   // Иконки персонажей
   const icons = [
     { name: "Default Cube", unlocked: true },
     { name: "Spiky", unlocked: true },
-    { name: "Happy", unlocked: false },
+    { name: "Happy", unlocked: true },
     { name: "Cool", unlocked: false },
     { name: "Angry", unlocked: false },
     { name: "Robot", unlocked: false },
+    { name: "Ghost", unlocked: false },
+    { name: "UFO", unlocked: false },
   ];
   
   // Цвета персонажей
@@ -25,9 +28,45 @@ const Index = () => {
     { name: "Pink", color: "#ff006e", unlocked: true },
     { name: "Blue", color: "#3a86ff", unlocked: true },
     { name: "Green", color: "#38b000", unlocked: true },
-    { name: "Orange", color: "#fb5607", unlocked: false },
+    { name: "Orange", color: "#fb5607", unlocked: true },
     { name: "Purple", color: "#8338ec", unlocked: false },
     { name: "Yellow", color: "#ffbe0b", unlocked: false },
+    { name: "Cyan", color: "#00b4d8", unlocked: false },
+    { name: "Red", color: "#e63946", unlocked: false },
+  ];
+  
+  // Список официальных уровней
+  const officialLevels = [
+    { name: "Stereo Madness", difficulty: "Easy", stars: 1, color: "from-green-600 to-green-400", completed: true, unlocked: true },
+    { name: "Back on Track", difficulty: "Easy", stars: 1, color: "from-green-600 to-green-400", completed: true, unlocked: true },
+    { name: "Polargeist", difficulty: "Normal", stars: 2, color: "from-yellow-600 to-yellow-400", completed: false, unlocked: true },
+    { name: "Dry Out", difficulty: "Normal", stars: 2, color: "from-yellow-600 to-yellow-400", completed: false, unlocked: true },
+    { name: "Base After Base", difficulty: "Hard", stars: 3, color: "from-orange-600 to-orange-400", completed: false, unlocked: true },
+    { name: "Cant Let Go", difficulty: "Hard", stars: 3, color: "from-orange-600 to-orange-400", completed: false, unlocked: true },
+    { name: "Jumper", difficulty: "Hard", stars: 3, color: "from-orange-600 to-orange-400", completed: false, unlocked: false },
+    { name: "Time Machine", difficulty: "Harder", stars: 4, color: "from-red-600 to-red-400", completed: false, unlocked: false },
+    { name: "Cycles", difficulty: "Harder", stars: 4, color: "from-red-600 to-red-400", completed: false, unlocked: false },
+    { name: "xStep", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+    { name: "Clutterfunk", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+    { name: "Theory of Everything", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+    { name: "Electroman Adventures", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+    { name: "Clubstep", difficulty: "Demon", stars: 10, color: "from-red-900 to-red-700", completed: false, unlocked: false },
+    { name: "Electrodynamix", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+    { name: "Hexagon Force", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+    { name: "Blast Processing", difficulty: "Harder", stars: 4, color: "from-red-600 to-red-400", completed: false, unlocked: false },
+    { name: "Theory of Everything 2", difficulty: "Demon", stars: 10, color: "from-red-900 to-red-700", completed: false, unlocked: false },
+    { name: "Geometrical Dominator", difficulty: "Harder", stars: 4, color: "from-red-600 to-red-400", completed: false, unlocked: false },
+    { name: "Deadlocked", difficulty: "Demon", stars: 10, color: "from-red-900 to-red-700", completed: false, unlocked: false },
+    { name: "Fingerdash", difficulty: "Insane", stars: 5, color: "from-purple-600 to-purple-400", completed: false, unlocked: false },
+  ];
+  
+  // Пользовательские уровни
+  const userLevels = [
+    { name: "Cosmic Adventure", author: "PlayerX", difficulty: "Easy", stars: 2, color: "from-blue-600 to-blue-400", likes: 387, downloads: 1204 },
+    { name: "Neon Galaxy", author: "DashMaster", difficulty: "Hard", stars: 4, color: "from-purple-600 to-purple-400", likes: 842, downloads: 3751 },
+    { name: "Techno Chaos", author: "EpicCreator", difficulty: "Insane", stars: 6, color: "from-red-700 to-red-500", likes: 1253, downloads: 8924 },
+    { name: "Crystal Caverns", author: "GeoGamer", difficulty: "Normal", stars: 3, color: "from-cyan-600 to-cyan-400", likes: 651, downloads: 2309 },
+    { name: "Inferno Run", author: "FlameJumper", difficulty: "Demon", stars: 10, color: "from-red-900 to-red-700", likes: 2487, downloads: 15362 },
   ];
   
   // Анимация фоновых элементов
@@ -38,7 +77,7 @@ const Index = () => {
   useEffect(() => {
     // Создаем фоновые элементы для параллакса
     const elements = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
       elements.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
@@ -78,7 +117,7 @@ const Index = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-700 to-blue-900 flex flex-col items-center justify-center overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-b from-blue-800 to-blue-950 flex flex-col items-center justify-center overflow-hidden relative">
       {/* Фоновые элементы */}
       <div className="absolute inset-0 overflow-hidden">
         {backgroundElements.map((el, index) => (
@@ -112,14 +151,13 @@ const Index = () => {
         {menuState === 'main' && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <Link to="/play">
-                <Button 
-                  variant="default" 
-                  className="w-full py-6 text-xl bg-green-500 hover:bg-green-600 transition-all hover:scale-105 shadow-lg shadow-green-500/50"
-                >
-                  Играть
-                </Button>
-              </Link>
+              <Button 
+                variant="default" 
+                className="w-full py-6 text-xl bg-green-500 hover:bg-green-600 transition-all hover:scale-105 shadow-lg shadow-green-500/50"
+                onClick={() => setMenuState('levels')}
+              >
+                Играть
+              </Button>
               <Button 
                 variant="default" 
                 className="w-full py-6 text-xl bg-purple-500 hover:bg-purple-600 transition-all hover:scale-105 shadow-lg shadow-purple-500/50"
@@ -133,13 +171,14 @@ const Index = () => {
               <Button 
                 variant="outline" 
                 className="w-full py-4 bg-blue-500/80 hover:bg-blue-600 border-white/20 text-white transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
-                onClick={() => setMenuState('levels')}
+                onClick={() => setMenuState('icons')}
               >
-                Уровни
+                Иконки
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full py-4 bg-blue-500/80 hover:bg-blue-600 border-white/20 text-white transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
+                onClick={() => setMenuState('settings')}
               >
                 Настройки
               </Button>
@@ -154,20 +193,26 @@ const Index = () => {
             {/* Значки на главном экране */}
             <div className="mt-12 flex justify-between items-center">
               <div className="flex gap-2">
-                <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center shadow-md">
                   <span className="text-black font-bold">5</span>
                 </div>
-                <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-blue-400 rounded-full flex items-center justify-center shadow-md">
                   <span className="text-black font-bold">2</span>
+                </div>
+                <div className="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-black font-bold">7</span>
                 </div>
               </div>
               
               <div className="flex gap-2">
-                <div className="w-10 h-10 bg-red-400 rounded-full flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center shadow-md">
                   <span className="text-black font-bold">❤️</span>
                 </div>
-                <div className="w-10 h-10 bg-purple-400 rounded-full flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-purple-400 rounded-full flex items-center justify-center shadow-md">
                   <span className="text-black font-bold">🏆</span>
+                </div>
+                <div className="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-black font-bold">🔑</span>
                 </div>
               </div>
             </div>
@@ -187,59 +232,182 @@ const Index = () => {
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="bg-gradient-to-r from-green-600 to-green-400 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <div className="text-lg font-bold text-white">Stereo Madness</div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold">⭐ Easy</div>
-                  <div className="text-white/80 text-sm">0/3 ⭐</div>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-green-600 to-green-400 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <div className="text-lg font-bold text-white">Back on Track</div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold">⭐ Easy</div>
-                  <div className="text-white/80 text-sm">0/3 ⭐</div>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-yellow-600 to-yellow-400 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <div className="text-lg font-bold text-white">Polargeist</div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="bg-orange-400 text-black px-2 py-1 rounded-full text-xs font-bold">⭐⭐ Normal</div>
-                  <div className="text-white/80 text-sm">0/3 ⭐</div>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-yellow-600 to-yellow-400 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <div className="text-lg font-bold text-white">Dry Out</div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="bg-orange-400 text-black px-2 py-1 rounded-full text-xs font-bold">⭐⭐ Normal</div>
-                  <div className="text-white/80 text-sm">0/3 ⭐</div>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-orange-600 to-orange-400 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform opacity-60">
-                <div className="text-lg font-bold text-white">Base After Base</div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="bg-red-400 text-black px-2 py-1 rounded-full text-xs font-bold">⭐⭐⭐ Hard</div>
-                  <div className="text-white/80 text-sm">🔒 Locked</div>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-orange-600 to-orange-400 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform opacity-60">
-                <div className="text-lg font-bold text-white">Cant Let Go</div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="bg-red-400 text-black px-2 py-1 rounded-full text-xs font-bold">⭐⭐⭐ Hard</div>
-                  <div className="text-white/80 text-sm">🔒 Locked</div>
-                </div>
-              </div>
+            {/* Категории уровней */}
+            <div className="flex justify-center gap-2 mb-6">
+              <Button
+                variant={selectedCategory === 'official' ? "default" : "outline"}
+                className={selectedCategory === 'official' ? "bg-blue-600" : "border-white/20 text-white"}
+                onClick={() => setSelectedCategory('official')}
+              >
+                Официальные
+              </Button>
+              <Button
+                variant={selectedCategory === 'user' ? "default" : "outline"}
+                className={selectedCategory === 'user' ? "bg-green-600" : "border-white/20 text-white"}
+                onClick={() => setSelectedCategory('user')}
+              >
+                Пользователя
+              </Button>
+              <Button
+                variant={selectedCategory === 'featured' ? "default" : "outline"}
+                className={selectedCategory === 'featured' ? "bg-purple-600" : "border-white/20 text-white"}
+                onClick={() => setSelectedCategory('featured')}
+              >
+                Избранные
+              </Button>
             </div>
+            
+            {/* Официальные уровни */}
+            {selectedCategory === 'official' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-h-[50vh] overflow-y-auto pr-2">
+                {officialLevels.map((level, idx) => (
+                  <Link to="/play" key={idx} className={!level.unlocked ? "pointer-events-none" : ""}>
+                    <div 
+                      className={`bg-gradient-to-r ${level.color} p-4 rounded-lg shadow-lg hover:scale-105 transition-transform ${!level.unlocked ? "opacity-50" : ""}`}
+                    >
+                      <div className="text-lg font-bold text-white">{level.name}</div>
+                      <div className="flex justify-between items-center mt-2">
+                        <div className={`
+                          ${level.difficulty === "Easy" ? "bg-yellow-400" : ""}
+                          ${level.difficulty === "Normal" ? "bg-orange-400" : ""}
+                          ${level.difficulty === "Hard" ? "bg-red-500" : ""}
+                          ${level.difficulty === "Harder" ? "bg-red-600" : ""}
+                          ${level.difficulty === "Insane" ? "bg-purple-500" : ""}
+                          ${level.difficulty === "Demon" ? "bg-red-900" : ""}
+                          text-black px-2 py-1 rounded-full text-xs font-bold
+                        `}>
+                          {[...Array(level.stars)].map((_, i) => "⭐").join("")} {level.difficulty}
+                        </div>
+                        <div className="text-white/80 text-sm">
+                          {level.completed ? "✓ Completed" : level.unlocked ? `0/3 ⭐` : "🔒 Locked"}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+            
+            {/* Пользовательские уровни */}
+            {selectedCategory === 'user' && (
+              <div className="grid grid-cols-1 gap-4 mb-6 max-h-[50vh] overflow-y-auto pr-2">
+                {userLevels.map((level, idx) => (
+                  <Link to="/play" key={idx}>
+                    <div className={`bg-gradient-to-r ${level.color} p-4 rounded-lg shadow-lg hover:scale-105 transition-transform`}>
+                      <div className="text-lg font-bold text-white">{level.name}</div>
+                      <div className="text-sm text-white/80 mb-2">by {level.author}</div>
+                      <div className="flex justify-between items-center">
+                        <div className={`
+                          ${level.difficulty === "Easy" ? "bg-yellow-400" : ""}
+                          ${level.difficulty === "Normal" ? "bg-orange-400" : ""}
+                          ${level.difficulty === "Hard" ? "bg-red-500" : ""}
+                          ${level.difficulty === "Insane" ? "bg-purple-500" : ""}
+                          ${level.difficulty === "Demon" ? "bg-red-900" : ""}
+                          text-black px-2 py-1 rounded-full text-xs font-bold
+                        `}>
+                          {[...Array(level.stars)].map((_, i) => "⭐").join("")} {level.difficulty}
+                        </div>
+                        <div className="flex gap-3 text-white/80 text-sm">
+                          <span>❤️ {level.likes}</span>
+                          <span>⬇️ {level.downloads}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+                
+                <Button 
+                  variant="default" 
+                  className="w-full py-4 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 mt-2"
+                >
+                  Поиск уровней 🔍
+                </Button>
+              </div>
+            )}
+            
+            {/* Избранные уровни */}
+            {selectedCategory === 'featured' && (
+              <div className="p-6 text-center">
+                <div className="text-white text-lg mb-4">У вас пока нет избранных уровней</div>
+                <div className="p-8 border-2 border-dashed border-white/20 rounded-lg mb-4">
+                  <span className="text-6xl">⭐</span>
+                  <p className="text-white/60 mt-4">Добавляйте уровни в избранное, чтобы быстро находить их здесь</p>
+                </div>
+                <Button 
+                  variant="default" 
+                  className="w-full py-4 bg-purple-500 hover:bg-purple-600 shadow-lg shadow-purple-500/30"
+                  onClick={() => setSelectedCategory('user')}
+                >
+                  Найти интересные уровни
+                </Button>
+              </div>
+            )}
           </div>
         )}
         
         {menuState === 'create' && (
+          <div className="bg-black/40 p-6 rounded-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Редактор уровней</h2>
+              <Button 
+                variant="outline" 
+                className="border-white/20 text-white"
+                onClick={() => setMenuState('main')}
+              >
+                ← Назад
+              </Button>
+            </div>
+            
+            <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button 
+                  variant="default" 
+                  className="w-full py-12 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/50 text-xl"
+                >
+                  Создать новый уровень
+                </Button>
+                
+                <Button 
+                  variant="default" 
+                  className="w-full py-12 bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/50 text-xl"
+                >
+                  Продолжить редактирование
+                </Button>
+              </div>
+              
+              <div className="bg-black/30 p-4 rounded-lg">
+                <h3 className="text-white text-lg mb-2">Мои уровни</h3>
+                
+                <div className="grid grid-cols-1 gap-2 max-h-[30vh] overflow-y-auto">
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-400 p-3 rounded-lg hover:scale-105 transition-transform">
+                    <div className="text-base font-bold text-white">My First Level</div>
+                    <div className="flex justify-between items-center mt-1">
+                      <div className="bg-yellow-400 text-black px-2 py-0.5 rounded-full text-xs font-bold">В разработке</div>
+                      <div className="text-white/80 text-xs">Обновлено: сегодня</div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-3 rounded-lg hover:scale-105 transition-transform">
+                    <div className="text-base font-bold text-white">Space Adventure</div>
+                    <div className="flex justify-between items-center mt-1">
+                      <div className="bg-green-400 text-black px-2 py-0.5 rounded-full text-xs font-bold">Опубликован</div>
+                      <div className="text-white/80 text-xs">❤️ 23 | ⬇️ 78</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                className="w-full py-4 border-white/20 text-white bg-purple-500/30 hover:bg-purple-500/50"
+              >
+                Обучение редактору уровней
+              </Button>
+            </div>
+          </div>
+        )}
+        
+        {menuState === 'icons' && (
           <div className="bg-black/40 p-6 rounded-xl">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-white">Персонализация</h2>
@@ -253,9 +421,30 @@ const Index = () => {
             </div>
             
             <div className="flex flex-col gap-6">
+              {/* Предпросмотр персонажа */}
+              <div className="bg-black/30 p-6 rounded-lg flex flex-col items-center">
+                <div 
+                  className="w-24 h-24 bg-gradient-to-br rounded-md flex items-center justify-center mb-4 shadow-lg animate-bounce"
+                  style={{ backgroundColor: colors[selectedColor].color }}
+                >
+                  <div className="text-5xl font-bold">
+                    {selectedIcon === 0 && '◼'}
+                    {selectedIcon === 1 && '◆'}
+                    {selectedIcon === 2 && '☺'}
+                    {selectedIcon === 3 && '😎'}
+                    {selectedIcon === 4 && '😠'}
+                    {selectedIcon === 5 && '🤖'}
+                    {selectedIcon === 6 && '👻'}
+                    {selectedIcon === 7 && '🛸'}
+                  </div>
+                </div>
+                <div className="text-white text-lg mb-2">Ваш персонаж</div>
+                <div className="text-white/60 text-sm">Разблокировано: {icons.filter(i => i.unlocked).length}/{icons.length} иконок, {colors.filter(c => c.unlocked).length}/{colors.length} цветов</div>
+              </div>
+              
               <div>
                 <h3 className="text-white text-xl mb-3">Выбрать иконку</h3>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                   {icons.map((icon, idx) => (
                     <div 
                       key={idx}
@@ -267,7 +456,7 @@ const Index = () => {
                       onClick={() => icon.unlocked && setSelectedIcon(idx)}
                     >
                       <div 
-                        className="w-full h-full bg-gradient-to-br from-[#ff006e] to-[#b80050] rounded-md flex items-center justify-center"
+                        className="w-full h-full bg-gradient-to-br rounded-md flex items-center justify-center"
                         style={{ backgroundColor: colors[selectedColor].color }}
                       >
                         <div className="text-lg font-bold">
@@ -277,6 +466,8 @@ const Index = () => {
                           {idx === 3 && '😎'}
                           {idx === 4 && '😠'}
                           {idx === 5 && '🤖'}
+                          {idx === 6 && '👻'}
+                          {idx === 7 && '🛸'}
                         </div>
                         {!icon.unlocked && <div className="absolute">🔒</div>}
                       </div>
@@ -287,7 +478,7 @@ const Index = () => {
               
               <div>
                 <h3 className="text-white text-xl mb-3">Выбрать цвет</h3>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                   {colors.map((color, idx) => (
                     <div 
                       key={idx}
@@ -309,14 +500,128 @@ const Index = () => {
                 </div>
               </div>
               
-              <div className="mt-4">
+              <div className="grid grid-cols-2 gap-3">
                 <Button 
                   variant="default" 
-                  className="w-full py-4 bg-purple-500 hover:bg-purple-600 shadow-lg shadow-purple-500/50"
+                  className="py-4 bg-cyan-500 hover:bg-cyan-600 shadow-lg shadow-cyan-500/30"
                 >
-                  Открыть редактор уровней
+                  Магазин иконок 🛒
+                </Button>
+                <Button 
+                  variant="default" 
+                  className="py-4 bg-purple-500 hover:bg-purple-600 shadow-lg shadow-purple-500/30"
+                >
+                  Достижения 🏆
                 </Button>
               </div>
+            </div>
+          </div>
+        )}
+        
+        {menuState === 'settings' && (
+          <div className="bg-black/40 p-6 rounded-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Настройки</h2>
+              <Button 
+                variant="outline" 
+                className="border-white/20 text-white"
+                onClick={() => setMenuState('main')}
+              >
+                ← Назад
+              </Button>
+            </div>
+            
+            <div className="flex flex-col gap-4">
+              <div className="bg-black/30 p-4 rounded-lg">
+                <h3 className="text-white text-lg mb-3">Аудио</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-white">Музыка</span>
+                  <div className="flex gap-2 items-center">
+                    <input type="range" min="0" max="100" defaultValue="80" className="w-32" />
+                    <Button 
+                      variant="ghost" 
+                      className="p-2 h-auto"
+                      onClick={toggleMusic}
+                    >
+                      {audioPlaying ? '🔊' : '🔇'}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white">Звуковые эффекты</span>
+                  <div className="flex gap-2 items-center">
+                    <input type="range" min="0" max="100" defaultValue="100" className="w-32" />
+                    <Button 
+                      variant="ghost" 
+                      className="p-2 h-auto"
+                    >
+                      🔊
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-black/30 p-4 rounded-lg">
+                <h3 className="text-white text-lg mb-3">Графика</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-white">Качество графики</span>
+                  <select className="bg-blue-900 text-white border border-blue-700 rounded p-1">
+                    <option>Высокое</option>
+                    <option>Среднее</option>
+                    <option>Низкое</option>
+                  </select>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white">Частицы</span>
+                  <Button 
+                    variant="outline" 
+                    className="border-white/20 text-white bg-blue-700"
+                  >
+                    Включены
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="bg-black/30 p-4 rounded-lg">
+                <h3 className="text-white text-lg mb-3">Управление</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-white">Отзывчивость</span>
+                  <input type="range" min="0" max="100" defaultValue="50" className="w-32" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white">Вибрация</span>
+                  <Button 
+                    variant="outline" 
+                    className="border-white/20 text-white"
+                  >
+                    Выключена
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="bg-black/30 p-4 rounded-lg">
+                <h3 className="text-white text-lg mb-3">Аккаунт</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-white">Имя игрока</span>
+                  <input type="text" defaultValue="Player" className="bg-blue-900 text-white border border-blue-700 rounded p-1" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white">Сохранение в облаке</span>
+                  <Button 
+                    variant="outline" 
+                    className="border-white/20 text-white bg-blue-700"
+                  >
+                    Включено
+                  </Button>
+                </div>
+              </div>
+              
+              <Button 
+                variant="default" 
+                className="w-full py-4 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30 mt-2"
+              >
+                Сбросить настройки
+              </Button>
             </div>
           </div>
         )}
@@ -332,6 +637,11 @@ const Index = () => {
             {audioPlaying ? '🔊 Выключить музыку' : '🔊 Включить музыку'}
           </Button>
         </div>
+      </div>
+      
+      {/* Версия игры */}
+      <div className="absolute bottom-2 right-2 text-white/50 text-xs">
+        Geometry Dash v2.11
       </div>
     </div>
   );
