@@ -76,7 +76,7 @@ const LoadingScreen = () => {
       </div>
       
       <div className="w-64 mb-8 relative z-10">
-        <Progress value={progress} className="h-3 bg-blue-950" indicatorClassName="bg-gradient-to-r from-cyan-400 to-blue-500" />
+        <Progress value={progress} className="h-3 bg-blue-950" />
         <div className="text-white text-right mt-2 flex justify-between items-center">
           <div className="text-xs text-cyan-300">ЗАГРУЗКА...</div>
           <div>{Math.round(progress)}%</div>
